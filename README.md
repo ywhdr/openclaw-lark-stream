@@ -160,3 +160,29 @@ openclaw gateway restart
 ## 📄 许可证
 
 MIT
+
+## ⚠️ OpenClaw 4.x 兼容性说明
+
+**当前状态：插件可在 OpenClaw 2026.4.24 上加载运行，但有已知限制。**
+
+### 可用的功能
+- ✅ 卡片流式输出（CardKit 2.0 streaming cards）
+- ✅ 底部状态栏（token、耗时、模型等）
+- ✅ Typing indicator、消息收发
+
+### 不可用的功能
+- ❌ `onToolStart` — 工具执行过程可视化（OpenClaw 4.x 未暴露，见 [issue #53122](https://github.com/openclaw/openclaw/issues/53122)）
+- ❌ `onReasoningStream` — 思考过程实时流式（见 [issue #48995](https://github.com/openclaw/openclaw/issues/48995)）
+
+### 安装（4.x）
+OpenClaw 4.x 的安全机制会阻止 `openclaw plugins install`，需从源码安装：
+```bash
+cd ~/.openclaw/extensions
+git clone https://github.com/ywhdr/openclaw-lark-stream.git openclaw-lark-stream
+cd openclaw-lark-stream
+npm install && npm run build
+openclaw gateway restart
+```
+
+### 待跟进
+- 关注 OpenClaw [#53122](https://github.com/openclaw/openclaw/issues/53122) 和 [#48995](https://github.com/openclaw/openclaw/issues/48995)，回调恢复后即可启用完整流式功能
