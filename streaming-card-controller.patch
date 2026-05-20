@@ -1,0 +1,34 @@
+--- a/src/card/streaming-card-controller.js
++++ b/src/card/streaming-card-controller.js
+@@ -411,6 +411,32 @@
+         await this.throttledCardUpdate();
+     }
++    async onCommandOutput(payload) {
++        if (!this.shouldProceed('onCommandOutput'))
++            return;
++        if (!this.shouldDisplayToolUse)
++            return;
++        this.markToolUseActivity();
++        // Track command output in the tool execution store
++        if (payload.output) {
++            this.commandOutput = (this.commandOutput ?? '') + payload.output;
++        }
++        if (payload.phase === 'complete' || payload.status === 'complete') {
++            // Command finished — mark in trace store
++            const { recordToolUseEnd } = require('./tool-use-trace-store.js');
++            recordToolUseEnd({
++                toolName: payload.name ?? payload.title ?? 'exec',
++                result: { output: this.commandOutput, exitCode: payload.exitCode },
++                durationMs: payload.durationMs,
++            });
++        }
++        await this.ensureCardCreated();
++        if (!this.shouldProceed('onCommandOutput.postCreate'))
++            return;
++        if (!this.cardKit.cardMessageId)
++            return;
++        await this.throttledCardUpdate();
++    }
+     async onToolPayload(_payload) {
+         if (!this.shouldProceed('onToolPayload'))
+             return;
