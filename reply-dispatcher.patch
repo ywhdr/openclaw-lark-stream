@@ -1,0 +1,13 @@
+--- a/src/card/reply-dispatcher.js
++++ b/src/card/reply-dispatcher.js
+@@ -402,6 +402,9 @@
+                 ? {
+                     onReasoningStream: (payload) => controller.onReasoningStream(payload),
+                     onPartialReply: (payload) => controller.onPartialReply(payload),
+                     onToolStart: (payload) => controller.onToolStart(payload),
++                    onCommandOutput: (payload) => controller.onCommandOutput(payload),
++                    onToolResult: (payload) => controller.onToolResult?.(payload),
++                    onItemEvent: (payload) => controller.onItemEvent?.(payload),
+                 }
+                 : {}),
+         },
